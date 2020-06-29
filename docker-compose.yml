@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  api:
+    image: roberto0arruda/php-fpm
+    volumes:
+      - ./api:/var/www
+    networks:
+      - backend
+
+  database:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    restart: always
+    tty: true
+    volumes:
+      - ./api/vendor/mysqldb:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    expose:
+      - 3306
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
